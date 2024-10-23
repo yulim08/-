@@ -13,7 +13,7 @@ with st.form("suggestion_form"):
 
     if submitted:
         # 데이터 저장 (예: CSV 파일)
-        data = {'Name': name, 'Email': email, 'Suggestion': suggestion}
+        data = {'Name': name, 'Suggestion': suggestion}
         df = pd.DataFrame([data])
 
         # 파일에 저장
