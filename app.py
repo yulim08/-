@@ -42,4 +42,17 @@ try:
 
 except FileNotFoundError:
     st.write("아직 제출된 건의사항이 없습니다.")
+     # 답글 작성
+    reply_for = st.selectbox("답글을 달 건의사항 선택", suggestions_df['Suggestion'].tolist())
+    reply_text = st.text_area("답글 입력")
+
+    if st.button("답글 달기"):
+        # 답글 추가
+        suggestions_df.loc[suggestions_df['Suggestion'] == reply_for, 'Reply'] = reply_text
+        suggestions_df.to_csv(file_path, index=False, header=True)  # 업데이트된 데이터 저장
+        st.success("답글이 달렸습니다!")
+        st.experimental_rerun()  # 페이지 새로 고침
+
+except FileNotFoundError:
+    st.write("아직 제출된 건의사항이 없습니다.")
 
