@@ -23,7 +23,7 @@ with st.form("suggestion_form"):
 # 제출된 건의사항 보기
 st.subheader("제출된 건의사항")
 try:
-    suggestions_df = pd.read_csv(file_path, names=['Name', 'Email', 'Suggestion'])
+    suggestions_df = pd.read_csv(file_path, names=['Name', 'Suggestion'])
     st.write(suggestions_df)
 
     # 삭제할 건의사항 선택
