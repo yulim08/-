@@ -8,6 +8,9 @@ st.title("학교 건의사항 제출하기")
 # 파일 경로 지정
 file_path = 'suggestions.csv'
 
+# 사용자 유형 선택
+user_type = st.selectbox("사용자 유형 선택", ["학생", "관리자"])
+
 # 건의사항 입력 폼
 with st.form("suggestion_form"):
     name = st.text_input("이름")
@@ -16,7 +19,7 @@ with st.form("suggestion_form"):
 
     if submitted:
         # 데이터 저장 (예: CSV 파일)
-        data = {'Name': name, 'Suggestion': suggestion}
+        data = {'Name': name, 'Suggestion': suggestion, 'Reply': '', 'User Type': user_type}
         df = pd.DataFrame([data])
 
         # 파일에 저장
@@ -27,22 +30,21 @@ with st.form("suggestion_form"):
 # 제출된 건의사항 보기
 st.subheader("제출된 건의사항")
 try:
-    suggestions_df = pd.read_csv(file_path, names=['Name', 'Suggestion'])
+    suggestions_df = pd.read_csv(file_path, names=['Name', 'Suggestion', 'Reply', 'User Type'])
     st.write(suggestions_df)
 
- # 삭제할 건의사항 및 이름 선택
-    suggestion_to_delete = st.selectbox("삭제할 건의사항 선택", suggestions_df['Suggestion'].tolist())
-    name_to_delete = suggestions_df[suggestions_df['Suggestion'] == suggestion_to_delete]['Name'].values[0]
+    if user_type == "관리자":
+        # 삭제할 건의사항 및 이름 선택
+        suggestion_to_delete = st.selectbox("삭제할 건의사항 선택", suggestions_df['Suggestion'].tolist())
+        
+        if st.button("삭제"):
+            # 선택한 건의사항 삭제
+            suggestions_df = suggestions_df[suggestions_df['Suggestion'] != suggestion_to_delete]
+            suggestions_df.to_csv(file_path, index=False, header=True)  # 업데이트된 데이터 저장
+            st.success("건의사항이 삭제되었습니다!")
+            st.experimental_rerun()  # 페이지 새로 고침
 
-    if st.button("삭제"):
-        # 선택한 건의사항 삭제
-        suggestions_df = suggestions_df[suggestions_df['Suggestion'] != suggestion_to_delete]
-        suggestions_df.to_csv(file_path, index=False, header=True)  # 업데이트된 데이터 저장
-        st.success("건의사항이 삭제되었습니다!")
-        st.experimental_rerun()  # 페이지 새로 고침
-
-
-     # 답글 작성
+    # 답글 작성
     reply_for = st.selectbox("답글을 달 건의사항 선택", suggestions_df['Suggestion'].tolist())
     reply_text = st.text_area("답글 입력")
 
@@ -55,4 +57,3 @@ try:
 
 except FileNotFoundError:
     st.write("아직 제출된 건의사항이 없습니다.")
-
