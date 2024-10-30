@@ -30,8 +30,9 @@ try:
     suggestions_df = pd.read_csv(file_path, names=['Name', 'Suggestion'])
     st.write(suggestions_df)
 
-    # 삭제할 건의사항 선택
+ # 삭제할 건의사항 및 이름 선택
     suggestion_to_delete = st.selectbox("삭제할 건의사항 선택", suggestions_df['Suggestion'].tolist())
+    name_to_delete = suggestions_df[suggestions_df['Suggestion'] == suggestion_to_delete]['Name'].values[0]
 
     if st.button("삭제"):
         # 선택한 건의사항 삭제
@@ -39,6 +40,7 @@ try:
         suggestions_df.to_csv(file_path, index=False, header=True)  # 업데이트된 데이터 저장
         st.success("건의사항이 삭제되었습니다!")
         st.experimental_rerun()  # 페이지 새로 고침
+
 
      # 답글 작성
     reply_for = st.selectbox("답글을 달 건의사항 선택", suggestions_df['Suggestion'].tolist())
