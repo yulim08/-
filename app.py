@@ -40,8 +40,6 @@ try:
         st.success("건의사항이 삭제되었습니다!")
         st.experimental_rerun()  # 페이지 새로 고침
 
-except FileNotFoundError:
-    st.write("아직 제출된 건의사항이 없습니다.")
      # 답글 작성
     reply_for = st.selectbox("답글을 달 건의사항 선택", suggestions_df['Suggestion'].tolist())
     reply_text = st.text_area("답글 입력")
